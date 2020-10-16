@@ -1,5 +1,69 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+ 
+<script type="text/javascript"
+    	src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js"></script>
+
+<script>
+var sock = null;
+
+$(function(){
+	connectWS();
+});
+
+function connectWS(){
+	
+	var host = "localhost:9090";
+
+    sock = new SockJS("http://" + host + '${pageContext.request.contextPath}/webSocket');
+    sock.onmessage = onMessage;
+    sock.onclose = onClose;
+    
+    // 서버로부터 메시지를 받았을 때
+    function onMessage(msg) {
+
+        let myId = "${userId}";
+
+    	console.log("메세지를 받았습니다");
+        //채팅
+        //console.log(typeof msg.data);
+        //console.log((msg.data).includes('sendMsg'));
+         if((msg.data).includes('sendMsg')){
+
+        		let msgArr = (msg.data).split("@");
+				//console.log(msgArr[0]); //roomCode
+				//console.log(msgArr[1]); //msg
+
+				//console.log($("#sendBtn").val());
+				//console.log(msgArr[0] == $("#sendBtn").val());
+				if(msgArr[0] == $("#sendBtn").val()){     	 
+					//$("#chatBox").append(msgArr[1]);       	 
+					$("#chatBox").prepend(msgArr[1]);       	 
+				}
+				
+            // $("#chatBox").append(msg.data);	
+
+		 //알림
+        }else{
+        	let $socketAlert = $("#socketAlert");
+	        $socketAlert.html(msg.data);
+	        $socketAlert.css('display', 'block');
+	
+	        //알림 유지 시간 (5초)
+	        setTimeout( function(){
+	        	$socketAlert.css('display', 'none');
+	        }, 5000);      
+
+        }
+    }
+    
+    // 서버와 연결을 끊었을 때
+    function onClose(evt) {
+        console.log("연결 끊김");
+    }
+    
+}
+</script>
     
     
     <!--::footer_part start::-->
@@ -10,7 +74,7 @@
                     <div class="col-lg-8">
                         <div class="copyright_text">
                             <P><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved <i class="ti-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">UdonMarket Inc</a>
 <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></P>
                         </div>
                     </div>

@@ -24,6 +24,20 @@ body {
   color: #555;
 }
 
-.nav-link:hover {
+/* .nav-link:hover {
   background: #f5f5f5;
+} */
+
+#profile {
+	margin: 0px auto;
 }
+
+#interList{
+	border-radius: 50%;
+	max-width: 5%;
+}
+
+.tempe{
+	color: Blue;
+}
+

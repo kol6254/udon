@@ -1,4 +1,239 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="community">
+
+
+	<!-- 게시글 조회 & 검색 -->
+	<select id="selectCommunityList" resultType="community">
+	<![CDATA[
+		select 
+			b.*,
+		    m.nickname,
+            m.address
+		from 
+		    board b
+		   		left join
+    				member m on(b.user_id = m.user_id)
+    	where b.user_id in (
+		                        select l.user_id 
+		                        from location l,(select latitude, longitude, radius from location where user_id = #{userId}) a
+		                        where calc_distance(a.latitude, a.longitude, l.latitude, l.longitude) < a.radius
+		                        ) 
+    	]]>
+
+			
+					
+			
+			<if test="searchType=='board_title' and keyword != null and keyword != '' ">
+
+				<![CDATA[AND b.board_title like '%${keyword}%' ]]>
+
+			</if>
+
+			<if test="searchType=='board_content' and keyword != null and keyword != '' ">
+
+				<!-- AND b.board_content like CONCAT('%' || #{keyword}, '%') -->
+				<![CDATA[AND b.board_content like '%${keyword}%' ]]>
+
+			</if>
+			
+			<if test="categoryCode==17">
+
+				AND b.category_code = 17
+
+			</if>
+			
+			<if test="categoryCode==18">
+
+				AND b.category_code = 18
+
+			</if>
+			
+			<if test="categoryCode==19">
+
+				AND b.category_code = 19
+
+			</if>
+			
+			<if test="categoryCode==20">
+
+				AND b.category_code = 20
+
+			</if>
+			
+			<if test="hashtagCode==1">
+
+				AND b.hashtag_code = 1
+
+			</if>
+			
+			<if test="hashtagCode==2">
+
+				AND b.hashtag_code = 2
+
+			</if>
+			
+			<if test="hashtagCode==3">
+
+				AND b.hashtag_code = 3
+
+			</if>
+			
+			<if test="hashtagCode==4">
+
+				AND b.hashtag_code = 4
+
+			</if>
+			
+			<if test="hashtagCode==5">
+
+				AND b.hashtag_code = 5
+
+			</if>
+			
+			<if test="hashtagCode==6">
+
+				AND b.hashtag_code = 6
+
+			</if>
+			
+			<if test="hashtagCode==7">
+
+				AND b.hashtag_code = 7
+
+			</if>
+			
+			<if test="hashtagCode==8">
+
+				AND b.hashtag_code = 8
+
+			</if>
+			
+			<if test="hashtagCode==9">
+
+				AND b.hashtag_code = 9
+
+			</if>
+			
+			<!-- <if test="categoryCode==22">
+
+				AND category_code = 22
+
+			</if> -->
+			
+
+		order by b.b_code desc
+	</select>
+	
+	<!-- 게시글 상세 -->
+	<select id="selectOneCommunityCollection" resultMap="communityCollectionMap">
+		select 
+		    b.b_code,
+            b.user_id,
+            b.category_code,
+            b.board_title,
+            b.board_content,
+            b.reg_date,
+            b.hashtag_code,
+           	b.like_this,
+		    m.nickname,
+            m.address,
+            (SELECT COUNT(reply_code) FROM reply WHERE b_code = #{bCode}) as reply_count
+		from 
+		    board b
+		   		left join
+    				member m on(b.user_id = m.user_id)
+		where 
+		    b.b_code = #{ bCode }
+	</select>
+	<resultMap type="community" id="communityCollectionMap">
+		<id column="b_code" property="bCode"/>
+		<result column="user_id" property="userId"/>
+		<result column="board_title" property="boardTitle"/>
+		<result column="board_content" property="boardContent"/>
+		<result column="reg_date" property="regDate"/>
+		<result column="hashtag_code" property="hashtagCode"/>
+		<result column="like_this" property="likeThis"/>
+	</resultMap>
+	
+	<!-- <select id="selectCommunityCategory" resultType="community">
+		select * from board where category_code = #{ categoryCode } order by b_code desc
+	</select> -->
+	
+
+	<!-- 게시글 등록 -->
+	<insert id="insert">
+		insert into board values (
+		SEQ_BOARD_NO.nextval,
+		#{userId},
+		#{categoryCode},
+		#{boardTitle},
+		#{boardContent},
+		sysdate,
+		<if test="hashtagCode==100">
+
+				null,
+
+		</if>
+		<if test="hashtagCode!=100">
+
+				#{hashtagCode},
+
+		</if>
+		0
+		)
+	</insert>
+	
+	<!-- 게시글 수정 폼 -->
+	<select id="selectByBCode" resultType="community">
+		select * from board where b_code = #{bCode}
+	</select>
+	
+	<!-- 게시글 수정 -->
+	<update id="update">
+		update board set 
+		category_code=#{categoryCode}, board_title=#{boardTitle}, board_content=#{boardContent}, hashtag_code=#{hashtagCode}
+		where b_code = #{bCode}
+	</update>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="delete">
+		delete from board where b_code = #{bCode}
+	</delete>
+	
+	<!-- 좋아요 -->
+	<insert id="createBoardLike">
+            INSERT INTO like_this VALUES(
+		#{bCode}, 
+		#{userId}
+		)
+        </insert>
+
+       <!--  <delete id="deleteBoardLike">
+            DELETE FROM like_this
+            WHERE b_code = #{bCode} AND user_id = #{userId}
+        </delete>
+
+        <select id="updateBoardLike">
+            UPDATE board
+            SET
+            like_this = (SELECT COUNT(*)
+            FROM like_this
+            WHERE b_code = #{bCode})
+            WHERE b_code = #{bCode}
+        </select>
+
+        <select id="getBoardLike" resultType="int">
+            SELECT COUNT(like_id) FROM like_this WHERE b_code = #{bCode} AND user_id = #{userId}
+        </select> -->
+
+
+<!-- 	신고관리(동네생활) -->
+	<select id="selectReportList" resultType="report">
+		select R.report_code, R.reason_code,R.report_id, R.b_code, RR.reason_content
+		from report R left join reason_report RR on R.reason_code = RR.reason_code
+		where R.b_code is not null
+	</select>	
+	
+
 </mapper>

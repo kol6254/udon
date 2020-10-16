@@ -118,6 +118,7 @@
 			<version>2.1</version>
 			<scope>provided</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
@@ -197,7 +198,79 @@
 	        <artifactId>spring-security-test</artifactId>
 	        <version>${org.springframework.security-version}</version>		
 	    </dependency>
-		       
+
+		<!-- file upload -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.3.3</version>
+		</dependency>
+		
+		<!-- json -->
+		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib-ext-spring</artifactId>
+			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>2.11.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.dataformat</groupId>
+		    <artifactId>jackson-dataformat-xml</artifactId>
+		    <version>2.11.0</version>
+		</dependency>
+		
+		
+		<!-- spring websocket 웹 소켓 (알림) 시작 -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-websocket</artifactId>
+		    <version>5.0.2.RELEASE</version>
+		</dependency>
+		<!-- websocket api (For handshake) -->
+		<dependency>
+		    <groupId>javax.websocket</groupId>
+		    <artifactId>javax.websocket-api</artifactId>
+		    <version>1.1</version>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- spring websocket 웹 소켓 (알림) 끝 -->
+		
+		
+<!-- 		카카오 로그인 페이지 시작 -->
+		<!-- httpcore(카카오) -->
+		<dependency> <groupId>org.apache.httpcomponents</groupId> <artifactId>httpcore</artifactId>
+		<version>4.4.6</version>
+		</dependency>
+		
+		<!-- httpclient(카카오) -->
+		<dependency>
+		<groupId>org.apache.httpcomponents</groupId> <artifactId>httpclient</artifactId>
+		<version>4.5.2</version>
+		</dependency>
+<!-- 		카카오 로그인 페이지 끝 -->
+
+	<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+			<dependency>
+				<groupId>javax.mail</groupId>
+				<artifactId>mail</artifactId>
+				<version>1.4.7</version>
+			</dependency>
+	
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-context-support</artifactId>
+				<version>${org.springframework-version}</version>
+			</dependency>
+		
 	</dependencies>
     <build>
         <plugins>
